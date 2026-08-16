@@ -1,9 +1,21 @@
 services:
-  postgres:
-    image: 'postgres:latest'
+  db:
+    image: postgres:18
+    container_name: kodama-postgres
+    restart: unless-stopped
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      POSTGRES_DB: kodama
+      POSTGRES_USER: kodama_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-kodama_dev_password}
     ports:
-      - '5432'
+      - "5432:5432"
+    volumes:
+      - kodama-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kodama_user -d kodama"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  kodama-db-data:

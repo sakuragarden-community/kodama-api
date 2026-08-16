@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: kodama-api
+  datasource:
+    url: jdbc:postgresql://localhost:5432/kodama
+    username: kodama_user
+    password: ${DB_PASSWORD:kodama_dev_password}
+  jpa:
+    hibernate:
+      ddl-auto: validate   # lo schema è gestito da Flyway, non da Hibernate
+    show-sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
