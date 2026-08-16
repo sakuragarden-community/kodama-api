@@ -10,7 +10,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - kodama-db-data:/var/lib/postgresql/data
+      - kodama-db-data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U kodama_user -d kodama"]
       interval: 5s
