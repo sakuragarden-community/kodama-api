@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: kodama_user
       POSTGRES_PASSWORD: ${DB_PASSWORD:-kodama_dev_password}
     ports:
-      - "5432:5432"
+      - "5434:5432"
     volumes:
       - kodama-db-data:/var/lib/postgresql
     healthcheck:

@@ -1,9 +1,16 @@
+server:
+  port: 8081
+
 spring:
   application:
     name: kodama-api
+  datasource:
+    url: jdbc:postgresql://localhost:5434/kodama
+    username: kodama_user
+    password: ${DB_PASSWORD:kodama_dev_password}
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: validate   # lo schema è gestito da Flyway, non da Hibernate
     show-sql: true
   flyway:
     enabled: true
