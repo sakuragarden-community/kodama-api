@@ -10,8 +10,12 @@ spring:
     password: ${DB_PASSWORD:kodama_dev_password}
   jpa:
     hibernate:
-      ddl-auto: validate   # lo schema è gestito da Flyway, non da Hibernate
+      ddl-auto: validate
     show-sql: true
+    # Le risposte sono DTO costruiti dentro la transazione del service: tenere
+    # aperta la sessione fino alla serializzazione nasconderebbe solo eventuali
+    # lazy loading fuori posto.
+    open-in-view: false
   flyway:
     enabled: true
     locations: classpath:db/migration
@@ -21,3 +25,22 @@ management:
     web:
       exposure:
         include: health,info
+
+kodama:
+  security:
+    jwt:
+      issuer: kodama-api
+      audience: kodama-api
+      key-id: kodama-signing-key
+      access-token-ttl: 1h
+      # Senza chiavi configurate ne viene generata una effimera a ogni avvio:
+      # sufficiente in sviluppo, da sostituire in produzione con una coppia
+      # RSA persistente (PKCS#8 per la privata, X.509 per la pubblica).
+      # private-key-location: file:/etc/kodama/jwt-private.pem
+      # public-key-location: file:/etc/kodama/jwt-public.pem
+    bootstrap:
+      # Crea al primo avvio l'utenza usata dal bot Discord.
+      enabled: true
+      client-id: discord-bot
+      client-secret: ${BOT_CLIENT_SECRET:}
+      roles: BOT
