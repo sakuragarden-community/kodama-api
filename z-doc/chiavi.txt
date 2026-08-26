@@ -1,0 +1,4 @@
+client_id     : discord-bot
+client_secret : JzAF2SS3gXdF54s-FEW8umUzhi9xRPZVh2y8TPjJaaw
+
+curl https://346d-2-35-200-181.ngrok-free.app/actuator/health

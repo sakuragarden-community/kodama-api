@@ -31,4 +31,4 @@ build/
 
 ### VS Code ###
 .vscode/
-z-doc/chiavi.txt
+/z-doc/chiavi.txt
