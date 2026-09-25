@@ -4,6 +4,8 @@ import it.sakura.garden.kodamaapi.auth.model.Role;
 import it.sakura.garden.kodamaapi.member.model.Member;
 import it.sakura.garden.kodamaapi.member.model.MemberStatus;
 import it.sakura.garden.kodamaapi.member.repository.MemberRepository;
+import it.sakura.garden.kodamaapi.TestcontainersConfiguration;
+import org.springframework.context.annotation.Import;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

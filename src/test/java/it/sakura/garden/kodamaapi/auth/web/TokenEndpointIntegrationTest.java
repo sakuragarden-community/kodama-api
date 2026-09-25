@@ -1,7 +1,9 @@
 package it.sakura.garden.kodamaapi.auth.web;
 
+import it.sakura.garden.kodamaapi.TestcontainersConfiguration;
 import it.sakura.garden.kodamaapi.auth.model.Role;
 import it.sakura.garden.kodamaapi.auth.service.UserService;
+import org.springframework.context.annotation.Import;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
