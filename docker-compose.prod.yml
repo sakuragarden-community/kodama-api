@@ -3,7 +3,12 @@ services:
     image: ghcr.io/sakuragarden-community/kodama-api:${KODAMA_TAG}
     restart: unless-stopped
     env_file: .env
+    volumes:
+      - ./keys:/app/keys:ro
     environment:
+      KODAMA_SECURITY_JWT_PRIVATEKEYLOCATION: file:/app/keys/jwt-private.pem
+      KODAMA_SECURITY_JWT_PUBLICKEYLOCATION: file:/app/keys/jwt-public.pem
+      SERVER_PORT: "8080"
       SPRING_PROFILES_ACTIVE: prod
       SPRING_DOCKER_COMPOSE_ENABLED: "false"
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-TAG="${1:?Specifica il tag dell'immagine}"
+TAG="${1:?Tag immagine mancante}"
 [[ "$TAG" =~ ^[A-Za-z0-9._-]+$ ]] || { echo "Tag non valido" >&2; exit 1; }
 
 cd /var/www/kodama-nest/api
