@@ -31,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * ruoli, non come vengono emessi — quello è coperto da
  * {@code TokenEndpointIntegrationTest}.
  */
+@Import(TestcontainersConfiguration.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional

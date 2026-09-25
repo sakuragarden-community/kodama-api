@@ -31,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Verifica il flusso OAuth 2.0 {@code client_credentials} dal token endpoint
  * fino all'uso effettivo del token su una API protetta.
  */
+@Import(TestcontainersConfiguration.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
