@@ -1,0 +1,7 @@
+server:
+  forward-headers-strategy: framework
+
+spring:
+  docker:
+    compose:
+      enabled: false
