@@ -1,6 +1,6 @@
 # Kodama API
 
-API REST per le entità `Member` e `Section`, protette da OAuth 2.0 + JWT.
+API REST per le entità `Member`, `Section` e `Setting`, protette da OAuth 2.0 + JWT.
 
 ## Autenticazione
 
@@ -144,6 +144,53 @@ Discord.
 | `id`   | int    | generato                                          |
 | `name` | string | obbligatorio, max 100                             |
 | `code` | string | univoco, max 50, `[a-z0-9-]+`                     |
+
+### Settings
+
+Configurazioni applicative chiave/valore, modificabili a runtime senza
+ridistribuire l'applicazione. Ogni configurazione è identificata dal proprio
+`path`, una stringa univoca in notazione puntata (es. `discord.channels.welcome`).
+
+| Metodo | Path                | Descrizione                                         |
+|--------|---------------------|-----------------------------------------------------|
+| `GET`  | `/settings/{path}`  | Legge la configurazione (`404` se il path non esiste) |
+| `PUT`  | `/settings/{path}`  | Imposta il valore; crea la configurazione se assente |
+
+| Campo   | Tipo   | Note                                                         |
+|---------|--------|--------------------------------------------------------------|
+| `path`  | string | univoco, max 255; arriva dall'URL, non dal corpo             |
+| `type`  | string | max 32, `[a-z0-9_-]+`, default `text`                        |
+| `value` | string | opzionale (`null` ammesso), testo libero                     |
+
+Il valore è **sempre memorizzato come testo**: `type` è un'indicazione per chi
+lo legge su come interpretarlo (es. `text`, `number`, `boolean`, `json`), non un
+vincolo verificato dal server.
+
+Il `PUT` è un upsert:
+
+- path inesistente → la configurazione viene creata con il `type` indicato, o
+  `text` se omesso;
+- path esistente → il valore viene sovrascritto (anche con `null`); il `type`
+  cambia solo se presente nel corpo.
+
+```bash
+curl -X PUT -H "Authorization: Bearer $ACCESS_TOKEN" \
+     -H "Content-Type: application/json" \
+     -d '{"value": "123456789012345678"}' \
+     http://localhost:8081/api/v1/settings/discord.channels.welcome
+```
+
+```json
+{"path": "discord.channels.welcome", "type": "text", "value": "123456789012345678"}
+```
+
+Lato codice, le stesse operazioni sono disponibili in `SettingService`:
+
+```java
+String channelId = settingService.getSetting("discord.channels.welcome").value();
+settingService.setSetting("xp.multiplier", "2");
+settingService.setSetting("xp.multiplier", "2", "number");
+```
 
 ## Formato degli errori
 

@@ -21,3 +21,12 @@
 | id | int | valore univoco | primaria | <autogenerato> |  |
 | name | string |  |  |  |  |
 | code | string | valore univoco |  |  |  |
+
+## Setting
+
+| **Nome** | **Tipo** | **Validazione** | **Chiave** | **Valore di default** | **Descrizione** |
+| --- | --- | --- | --- | --- | --- |
+| id | int | valore univoco | primaria | <autogenerato> |  |
+| path | string | valore univoco, obbligatorio |  |  | chiave della configurazione, es. `discord.channels.welcome` |
+| type | string | obbligatorio |  | text | come interpretare `value` |
+| value | text | nullable |  |  | valore della configurazione |
