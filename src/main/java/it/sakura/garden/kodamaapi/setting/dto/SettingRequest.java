@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 
 /**
  * Payload di scrittura di una configurazione. Il path non compare perché
- * arriva dall'URL.
+ * arriva dal parametro di query {@code path}.
  *
  * @param value nuovo valore, {@code null} per svuotarlo
  * @param type  opzionale: se omesso resta quello attuale, o {@code text} per

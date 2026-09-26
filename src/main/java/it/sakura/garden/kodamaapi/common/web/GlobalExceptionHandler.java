@@ -16,6 +16,7 @@ import org.springframework.security.authentication.AuthenticationTrustResolverIm
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -87,6 +88,14 @@ public class GlobalExceptionHandler {
                                                        HttpServletRequest request) {
         String message = "Il parametro '%s' ha un valore non valido: '%s'"
                 .formatted(exception.getName(), exception.getValue());
+        return build(HttpStatus.BAD_REQUEST, message, request);
+    }
+
+    /** Parametro di query obbligatorio assente. */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiError> handleMissingParameter(MissingServletRequestParameterException exception,
+                                                           HttpServletRequest request) {
+        String message = "Il parametro '%s' è obbligatorio".formatted(exception.getParameterName());
         return build(HttpStatus.BAD_REQUEST, message, request);
     }
 

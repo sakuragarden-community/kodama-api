@@ -149,16 +149,18 @@ Discord.
 
 Configurazioni applicative chiave/valore, modificabili a runtime senza
 ridistribuire l'applicazione. Ogni configurazione è identificata dal proprio
-`path`, una stringa univoca in notazione puntata (es. `discord.channels.welcome`).
+`path`, una stringa univoca nel formato `<section>/<group>/<field>`
+(es. `channels/info/news`), passato come parametro di query `path`:
+`/settings?path=channels/info/news`. Senza il parametro la risposta è `400`.
 
-| Metodo | Path                | Descrizione                                         |
-|--------|---------------------|-----------------------------------------------------|
-| `GET`  | `/settings/{path}`  | Legge la configurazione (`404` se il path non esiste) |
-| `PUT`  | `/settings/{path}`  | Imposta il valore; crea la configurazione se assente |
+| Metodo | Path                     | Descrizione                                         |
+|--------|--------------------------|-----------------------------------------------------|
+| `GET`  | `/settings?path={path}`  | Legge la configurazione (`404` se il path non esiste) |
+| `PUT`  | `/settings?path={path}`  | Imposta il valore; crea la configurazione se assente |
 
 | Campo   | Tipo   | Note                                                         |
 |---------|--------|--------------------------------------------------------------|
-| `path`  | string | univoco, max 255; arriva dall'URL, non dal corpo             |
+| `path`  | string | univoco, max 255; parametro di query, non nel corpo          |
 | `type`  | string | max 32, `[a-z0-9_-]+`, default `text`                        |
 | `value` | string | opzionale (`null` ammesso), testo libero                     |
 
@@ -177,19 +179,19 @@ Il `PUT` è un upsert:
 curl -X PUT -H "Authorization: Bearer $ACCESS_TOKEN" \
      -H "Content-Type: application/json" \
      -d '{"value": "123456789012345678"}' \
-     http://localhost:8081/api/v1/settings/discord.channels.welcome
+     "http://localhost:8081/api/v1/settings?path=channels/info/news"
 ```
 
 ```json
-{"path": "discord.channels.welcome", "type": "text", "value": "123456789012345678"}
+{"path": "channels/info/news", "type": "text", "value": "123456789012345678"}
 ```
 
 Lato codice, le stesse operazioni sono disponibili in `SettingService`:
 
 ```java
-String channelId = settingService.getSetting("discord.channels.welcome").value();
-settingService.setSetting("xp.multiplier", "2");
-settingService.setSetting("xp.multiplier", "2", "number");
+String channelId = settingService.getSetting("channels/info/news").value();
+settingService.setSetting("voice/limits/max_users", "12");
+settingService.setSetting("voice/limits/max_users", "12", "number");
 ```
 
 ## Formato degli errori
