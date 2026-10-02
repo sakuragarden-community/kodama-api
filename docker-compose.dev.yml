@@ -1,0 +1,76 @@
+services:
+  db:
+    image: postgres:18
+    container_name: kodama-api-db-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: kodama
+      POSTGRES_USER: kodama_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-kodama_dev_password}
+      TZ: Europe/Rome
+    ports:
+      - "127.0.0.1:5434:5432"        # per IntelliJ Database / psql dall'host
+    volumes:
+      - db-data:/var/lib/postgresql  # path di Postgres 18
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kodama_user -d kodama"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    image: eclipse-temurin:25-jdk
+    container_name: kodama-api-dev
+    restart: unless-stopped
+    user: "${UID:-1000}:${GID:-1000}"
+    working_dir: /app
+    environment:
+      HOME: /home/ubuntu
+      TZ: Europe/Rome
+      SPRING_DOCKER_COMPOSE_ENABLED: "false"
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/kodama
+      DB_PASSWORD: ${DB_PASSWORD:-kodama_dev_password}
+      BOT_CLIENT_SECRET: ${BOT_CLIENT_SECRET:-}
+    command: >
+      sh ./mvnw spring-boot:run
+      -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+    ports:
+      - "127.0.0.1:8081:8081"        # API (Postman)
+      - "127.0.0.1:5005:5005"        # debug remoto da IntelliJ
+    volumes:
+      - ${PROJECT_PATH:-/var/www/kodama-nest/kodama-api}:/app
+      - maven-home:/home/ubuntu      # cache Maven + wrapper
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [default, kodama-nest]
+
+  compiler:
+    image: eclipse-temurin:25-jdk
+    container_name: kodama-api-compiler-dev
+    restart: unless-stopped
+    user: "${UID:-1000}:${GID:-1000}"
+    working_dir: /app
+    environment:
+      HOME: /home/ubuntu
+    volumes:
+      - ${PROJECT_PATH:-/var/www/kodama-nest/kodama-api}:/app
+      - maven-home:/home/ubuntu
+    depends_on: [api]
+    command: >
+      sh -c 'touch /tmp/.last;
+             while true; do
+               if [ -n "$$(find src/main -newer /tmp/.last -print -quit)" ]; then
+                 touch /tmp/.last; echo "Modifiche rilevate, ricompilo...";
+                 sh ./mvnw -q compile && echo "OK";
+               fi;
+               sleep 2;
+             done'
+
+volumes:
+  db-data:
+  maven-home:
+
+networks:
+  kodama-nest:
+    external: true
