@@ -5,3 +5,4 @@ target/
 .env
 compose.yaml
 docker-compose*.yml
+keys/
