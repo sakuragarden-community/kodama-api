@@ -16,6 +16,11 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "127.0.0.1:8080:8080"
+    networks:
+      default:
+      # Rete condivisa con il bot Discord: raggiungibile come http://kodama-api:8080
+      kodama-nest:
+        aliases: [kodama-api]
     depends_on:
       db:
         condition: service_healthy
@@ -35,4 +40,8 @@ services:
 
 volumes:
   pgdata:
+
+networks:
+  kodama-nest:
+    external: true
 

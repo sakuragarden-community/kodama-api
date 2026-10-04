@@ -7,6 +7,9 @@ TAG="${1:?Tag immagine mancante}"
 cd /var/www/kodama-nest/api
 COMPOSE="docker compose -f docker-compose.prod.yml"
 
+# Rete condivisa con il bot Discord (idempotente)
+docker network inspect kodama-nest > /dev/null 2>&1 || docker network create kodama-nest
+
 sed -i "s/^KODAMA_TAG=.*/KODAMA_TAG=${TAG}/" .env
 $COMPOSE pull api
 $COMPOSE up -d
