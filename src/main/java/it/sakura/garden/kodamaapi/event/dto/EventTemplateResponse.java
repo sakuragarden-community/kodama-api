@@ -10,6 +10,7 @@ public record EventTemplateResponse(
         Integer id,
         Integer eventId,
         String eventName,
+        String name,
         String discordEventTitle,
         String discordEventDescription,
         String discordNewsChannel,

@@ -53,7 +53,7 @@ class EventTemplateServiceImplTest {
     void findImageDecodesDataUri() {
         byte[] bytes = "immagine".getBytes(StandardCharsets.UTF_8);
         String dataUri = "data:image/webp;base64," + Base64.getEncoder().encodeToString(bytes);
-        EventTemplate template = new EventTemplate(EVENT, "Titolo", "Descrizione", dataUri, "456", "Notizia", null);
+        EventTemplate template = new EventTemplate(EVENT, "Arte libera - serata", "Titolo", "Descrizione", dataUri, "456", "Notizia", null);
         when(eventTemplateRepository.findById(1)).thenReturn(Optional.of(template));
 
         EventTemplateImage image = eventTemplateService.findImage(1);
@@ -69,9 +69,10 @@ class EventTemplateServiceImplTest {
         when(eventTemplateRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         EventTemplateResponse response = eventTemplateService.create(new EventTemplateRequest(
-                1, "Titolo", "Descrizione", "data:image/png;base64,AAAA", "456", "Notizia", "   "));
+                1, "Arte libera - serata", "Titolo", "Descrizione", "data:image/png;base64,AAAA", "456", "Notizia", "   "));
 
         assertThat(response.discordThreadPost()).isNull();
         assertThat(response.eventName()).isEqualTo("Arte libera");
+        assertThat(response.name()).isEqualTo("Arte libera - serata");
     }
 }

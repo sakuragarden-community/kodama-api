@@ -27,6 +27,10 @@ public class EventTemplate {
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
+    /** Nome con cui il template viene riconosciuto nelle liste, es. nelle select del bot. */
+    @Column(name = "name", nullable = false, length = 100)
+    private String name;
+
     @Column(name = "discord_event_title", nullable = false, length = 100)
     private String discordEventTitle;
 
@@ -55,10 +59,11 @@ public class EventTemplate {
         // richiesto da JPA
     }
 
-    public EventTemplate(Event event, String discordEventTitle, String discordEventDescription,
+    public EventTemplate(Event event, String name, String discordEventTitle, String discordEventDescription,
                          String discordEventImage, String discordNewsChannel, String discordNewsContent,
                          String discordThreadPost) {
         this.event = event;
+        this.name = name;
         this.discordEventTitle = discordEventTitle;
         this.discordEventDescription = discordEventDescription;
         this.discordEventImage = discordEventImage;
@@ -77,6 +82,14 @@ public class EventTemplate {
 
     public void setEvent(Event event) {
         this.event = event;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDiscordEventTitle() {
@@ -142,6 +155,6 @@ public class EventTemplate {
 
     @Override
     public String toString() {
-        return "EventTemplate{id=%d, discordEventTitle='%s'}".formatted(id, discordEventTitle);
+        return "EventTemplate{id=%d, name='%s'}".formatted(id, name);
     }
 }

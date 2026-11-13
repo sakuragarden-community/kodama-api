@@ -183,6 +183,7 @@ Contenuti con cui un evento viene pubblicato su Discord.
 | `id`                      | int    | generato                                                     |
 | `eventId`                 | int    | obbligatorio, evento esistente (`404` altrimenti)            |
 | `eventName`               | string | solo in risposta                                             |
+| `name`                    | string | obbligatorio, max 100: nome del template nelle liste del bot |
 | `discordEventTitle`       | string | obbligatorio, max 100                                        |
 | `discordEventDescription` | string | obbligatorio, max 800 (markdown)                             |
 | `discordEventImage`       | string | obbligatorio, **solo in richiesta**: data URI base64 PNG/JPEG/GIF/WEBP, max 4 MB |

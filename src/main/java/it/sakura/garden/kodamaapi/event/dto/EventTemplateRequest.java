@@ -8,7 +8,8 @@ import jakarta.validation.constraints.Size;
 /**
  * Payload di creazione e aggiornamento di un template evento.
  *
- * <p>I limiti di lunghezza seguono quelli di Discord: titolo dell'evento max
+ * <p>I limiti di lunghezza seguono quelli di Discord: nome del template max
+ * 100 come l'etichetta di un'opzione delle select, titolo dell'evento max
  * 100, descrizione max 1000 di cui {@value #DESCRIPTION_MAX_LENGTH} riservati al
  * testo libero (il resto è la riga di riepilogo composta dal bot), messaggi max
  * 2000 meno lo spazio per il link all'evento in coda alla notizia.
@@ -22,6 +23,10 @@ public record EventTemplateRequest(
 
         @NotNull(message = "eventId è obbligatorio")
         Integer eventId,
+
+        @NotBlank(message = "name è obbligatorio")
+        @Size(max = 100, message = "name non può superare i 100 caratteri")
+        String name,
 
         @NotBlank(message = "discordEventTitle è obbligatorio")
         @Size(max = 100, message = "discordEventTitle non può superare i 100 caratteri")

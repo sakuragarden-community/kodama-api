@@ -14,13 +14,14 @@ import org.springframework.stereotype.Component;
 public class EventTemplateMapper {
 
     public EventTemplate toEntity(EventTemplateRequest request, Event event) {
-        return new EventTemplate(event, request.discordEventTitle(), request.discordEventDescription(),
+        return new EventTemplate(event, request.name(), request.discordEventTitle(), request.discordEventDescription(),
                 request.discordEventImage(), request.discordNewsChannel(), request.discordNewsContent(),
                 threadPost(request));
     }
 
     public void merge(EventTemplate template, EventTemplateRequest request, Event event) {
         template.setEvent(event);
+        template.setName(request.name());
         template.setDiscordEventTitle(request.discordEventTitle());
         template.setDiscordEventDescription(request.discordEventDescription());
         template.setDiscordEventImage(request.discordEventImage());
@@ -33,7 +34,7 @@ public class EventTemplateMapper {
         Event event = template.getEvent();
 
         return new EventTemplateResponse(template.getId(), event.getId(), event.getName(),
-                template.getDiscordEventTitle(), template.getDiscordEventDescription(),
+                template.getName(), template.getDiscordEventTitle(), template.getDiscordEventDescription(),
                 template.getDiscordNewsChannel(), template.getDiscordNewsContent(),
                 template.getDiscordThreadPost());
     }

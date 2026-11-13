@@ -63,7 +63,7 @@ class EventControllerIntegrationTest {
                 """.formatted(sectionId));
 
         return create("/api/v1/event-templates", """
-                {"eventId": %d, "discordEventTitle": "Serata di arte libera",
+                {"eventId": %d, "name": "Arte libera - serata", "discordEventTitle": "Serata di arte libera",
                  "discordEventDescription": "Fare arte è ancora più bello in compagnia!",
                  "discordEventImage": "data:image/png;base64,%s",
                  "discordNewsChannel": "987654321", "discordNewsContent": "Torna la serata di arte libera!"}
@@ -110,6 +110,7 @@ class EventControllerIntegrationTest {
         mockMvc.perform(get("/api/v1/event-templates/{id}", templateId).with(as(Role.READ_ONLY)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.eventName").value("Arte libera"))
+                .andExpect(jsonPath("$.name").value("Arte libera - serata"))
                 .andExpect(jsonPath("$.discordThreadPost").doesNotExist())
                 .andExpect(jsonPath("$.discordEventImage").doesNotExist());
 
