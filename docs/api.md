@@ -145,6 +145,82 @@ Discord.
 | `name` | string | obbligatorio, max 100                             |
 | `code` | string | univoco, max 50, `[a-z0-9-]+`                     |
 
+### Events
+
+| Metodo   | Path            | Descrizione                       |
+|----------|-----------------|-----------------------------------|
+| `GET`    | `/events`       | Lista paginata                    |
+| `GET`    | `/events/{id}`  | Dettaglio                         |
+| `POST`   | `/events`       | Creazione                         |
+| `PUT`    | `/events/{id}`  | Aggiornamento                     |
+| `DELETE` | `/events/{id}`  | Eliminazione (`409` se ha template) |
+
+| Campo             | Tipo    | Note                                                   |
+|-------------------|---------|--------------------------------------------------------|
+| `id`              | int     | generato                                               |
+| `sectionId`       | int     | obbligatorio, sezione esistente (`404` altrimenti)     |
+| `sectionName`     | string  | solo in risposta                                       |
+| `name`            | string  | obbligatorio, max 100                                  |
+| `interest`        | string  | obbligatorio, ID del ruolo Discord (solo cifre)        |
+| `maxParticipants` | int     | ≥ 0, default `0` = nessun limite                       |
+| `isOpen`          | boolean | obbligatorio; `false` = iscrizione richiesta           |
+
+### Event templates
+
+Contenuti con cui un evento viene pubblicato su Discord.
+
+| Metodo   | Path                          | Descrizione                                  |
+|----------|-------------------------------|----------------------------------------------|
+| `GET`    | `/event-templates`            | Lista paginata                               |
+| `GET`    | `/event-templates/{id}`       | Dettaglio                                    |
+| `GET`    | `/event-templates/{id}/image` | Immagine in binario, con il suo `Content-Type` |
+| `POST`   | `/event-templates`            | Creazione                                    |
+| `PUT`    | `/event-templates/{id}`       | Aggiornamento                                |
+| `DELETE` | `/event-templates/{id}`       | Eliminazione (`409` se ha edizioni)          |
+
+| Campo                     | Tipo   | Note                                                         |
+|---------------------------|--------|--------------------------------------------------------------|
+| `id`                      | int    | generato                                                     |
+| `eventId`                 | int    | obbligatorio, evento esistente (`404` altrimenti)            |
+| `eventName`               | string | solo in risposta                                             |
+| `discordEventTitle`       | string | obbligatorio, max 100                                        |
+| `discordEventDescription` | string | obbligatorio, max 800 (markdown)                             |
+| `discordEventImage`       | string | obbligatorio, **solo in richiesta**: data URI base64 PNG/JPEG/GIF/WEBP, max 4 MB |
+| `discordNewsChannel`      | string | obbligatorio, ID del canale notizie (solo cifre)             |
+| `discordNewsContent`      | string | obbligatorio, max 1800 (markdown)                            |
+| `discordThreadPost`       | string | opzionale, max 2000; vuoto equivale ad assente               |
+
+L'immagine è salvata come data URI e non come URL perché gli URL degli
+allegati Discord scadono. Non compare nelle risposte JSON per non appesantire
+le liste: si scarica da `/event-templates/{id}/image`.
+
+I limiti di lunghezza lasciano spazio a ciò che il bot aggiunge: la riga di
+riepilogo in testa alla descrizione dell'evento Discord (max 1000) e il link
+all'evento in coda alla notizia (max 2000).
+
+### Event editions
+
+Singole date in cui un template evento si svolge.
+
+| Metodo   | Path                         | Descrizione                                        |
+|----------|------------------------------|----------------------------------------------------|
+| `GET`    | `/event-editions`            | Lista paginata, filtri `?from=` e `?to=`           |
+| `GET`    | `/event-editions/{id}`       | Dettaglio                                          |
+| `POST`   | `/event-editions`            | Creazione                                          |
+| `PUT`    | `/event-editions/{id}`       | Aggiornamento                                      |
+| `DELETE` | `/event-editions/{id}`       | Eliminazione                                       |
+
+`from` e `to` sono istanti ISO-8601 (es. `2026-11-20T00:00:00Z`) e filtrano
+per `plannedAt` nell'intervallo semiaperto `[from, to)`; ciascuno è
+opzionale. Ordinamento di default: `plannedAt,asc`.
+
+| Campo             | Tipo      | Note                                                  |
+|-------------------|-----------|-------------------------------------------------------|
+| `id`              | int       | generato                                              |
+| `eventTemplateId` | int       | obbligatorio, template esistente (`404` altrimenti)   |
+| `plannedAt`       | timestamp | obbligatorio, nel futuro                              |
+| `discordEventId`  | string    | opzionale, ID dell'evento programmato creato dal bot  |
+
 ### Settings
 
 Configurazioni applicative chiave/valore, modificabili a runtime senza
@@ -227,7 +303,7 @@ Tutte le API (non il token endpoint) rispondono con lo stesso corpo:
 | 401    | token assente, scaduto o non verificabile         |
 | 403    | token valido ma ruolo insufficiente               |
 | 404    | risorsa inesistente                               |
-| 409    | violazione di unicità (`discordId`, `code`)       |
+| 409    | violazione di unicità (`discordId`, `code`) o eliminazione di una risorsa ancora referenziata |
 
 ## Struttura del progetto
 

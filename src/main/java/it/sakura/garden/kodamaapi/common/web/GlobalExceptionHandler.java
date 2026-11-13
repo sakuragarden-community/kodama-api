@@ -1,6 +1,7 @@
 package it.sakura.garden.kodamaapi.common.web;
 
 import it.sakura.garden.kodamaapi.common.exception.DuplicateResourceException;
+import it.sakura.garden.kodamaapi.common.exception.ResourceInUseException;
 import it.sakura.garden.kodamaapi.common.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -54,6 +55,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ApiError> handleDuplicate(DuplicateResourceException exception,
                                                     HttpServletRequest request) {
+        return build(HttpStatus.CONFLICT, exception.getMessage(), request);
+    }
+
+    @ExceptionHandler(ResourceInUseException.class)
+    public ResponseEntity<ApiError> handleInUse(ResourceInUseException exception,
+                                                HttpServletRequest request) {
         return build(HttpStatus.CONFLICT, exception.getMessage(), request);
     }
 
