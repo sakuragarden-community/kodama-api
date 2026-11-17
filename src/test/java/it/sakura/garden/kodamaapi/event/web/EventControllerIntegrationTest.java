@@ -83,10 +83,12 @@ class EventControllerIntegrationTest {
         mockMvc.perform(put("/api/v1/event-editions/{id}", editionId).with(as(Role.BOT))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                {"eventTemplateId": %d, "plannedAt": "%s", "discordEventId": "1122334455"}
+                                {"eventTemplateId": %d, "plannedAt": "%s", "discordEventId": "1122334455",
+                                 "discordNewsThreadId": "5544332211"}
                                 """.formatted(templateId, plannedAt)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.discordEventId").value("1122334455"));
+                .andExpect(jsonPath("$.discordEventId").value("1122334455"))
+                .andExpect(jsonPath("$.discordNewsThreadId").value("5544332211"));
 
         mockMvc.perform(get("/api/v1/event-editions").with(as(Role.READ_ONLY))
                         .param("from", plannedAt.minus(1, ChronoUnit.HOURS).toString())

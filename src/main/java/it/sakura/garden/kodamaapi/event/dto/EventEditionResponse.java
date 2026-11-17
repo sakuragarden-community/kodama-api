@@ -7,5 +7,6 @@ public record EventEditionResponse(
         Integer id,
         Integer eventTemplateId,
         Instant plannedAt,
-        String discordEventId) {
+        String discordEventId,
+        String discordNewsThreadId) {
 }

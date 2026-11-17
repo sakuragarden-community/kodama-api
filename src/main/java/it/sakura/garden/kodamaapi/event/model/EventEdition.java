@@ -32,14 +32,20 @@ public class EventEdition {
     @Column(name = "discord_event_id", length = 32)
     private String discordEventId;
 
+    /** Thread della notizia della settimana prima, dove esce il promemoria; {@code null} finché non esiste. */
+    @Column(name = "discord_news_thread_id", length = 32)
+    private String discordNewsThreadId;
+
     protected EventEdition() {
         // richiesto da JPA
     }
 
-    public EventEdition(EventTemplate eventTemplate, Instant plannedAt, String discordEventId) {
+    public EventEdition(EventTemplate eventTemplate, Instant plannedAt, String discordEventId,
+                        String discordNewsThreadId) {
         this.eventTemplate = eventTemplate;
         this.plannedAt = plannedAt;
         this.discordEventId = discordEventId;
+        this.discordNewsThreadId = discordNewsThreadId;
     }
 
     public Integer getId() {
@@ -68,6 +74,14 @@ public class EventEdition {
 
     public void setDiscordEventId(String discordEventId) {
         this.discordEventId = discordEventId;
+    }
+
+    public String getDiscordNewsThreadId() {
+        return discordNewsThreadId;
+    }
+
+    public void setDiscordNewsThreadId(String discordNewsThreadId) {
+        this.discordNewsThreadId = discordNewsThreadId;
     }
 
     @Override

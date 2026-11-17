@@ -221,6 +221,7 @@ opzionale. Ordinamento di default: `plannedAt,asc`.
 | `eventTemplateId` | int       | obbligatorio, template esistente (`404` altrimenti)   |
 | `plannedAt`       | timestamp | obbligatorio, nel futuro                              |
 | `discordEventId`  | string    | opzionale, ID dell'evento programmato creato dal bot  |
+| `discordNewsThreadId` | string | opzionale, ID del thread della notizia della settimana prima, dove esce il promemoria del giorno stesso |
 
 ### Settings
 

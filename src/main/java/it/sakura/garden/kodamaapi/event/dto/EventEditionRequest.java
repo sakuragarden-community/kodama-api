@@ -12,6 +12,8 @@ import java.time.Instant;
  *
  * @param discordEventId evento programmato creato dal bot su Discord; opzionale,
  *                       il bot lo valorizza dopo averlo creato
+ * @param discordNewsThreadId thread della notizia della settimana prima; opzionale,
+ *                            il bot lo valorizza dopo averla pubblicata
  */
 public record EventEditionRequest(
 
@@ -24,5 +26,9 @@ public record EventEditionRequest(
 
         @Size(max = 32, message = "discordEventId non può superare i 32 caratteri")
         @Pattern(regexp = "\\d+", message = "discordEventId deve contenere solo cifre")
-        String discordEventId) {
+        String discordEventId,
+
+        @Size(max = 32, message = "discordNewsThreadId non può superare i 32 caratteri")
+        @Pattern(regexp = "\\d+", message = "discordNewsThreadId deve contenere solo cifre")
+        String discordNewsThreadId) {
 }

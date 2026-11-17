@@ -14,18 +14,20 @@ import org.springframework.stereotype.Component;
 public class EventEditionMapper {
 
     public EventEdition toEntity(EventEditionRequest request, EventTemplate template) {
-        return new EventEdition(template, request.plannedAt(), request.discordEventId());
+        return new EventEdition(template, request.plannedAt(), request.discordEventId(),
+                request.discordNewsThreadId());
     }
 
     public void merge(EventEdition edition, EventEditionRequest request, EventTemplate template) {
         edition.setEventTemplate(template);
         edition.setPlannedAt(request.plannedAt());
         edition.setDiscordEventId(request.discordEventId());
+        edition.setDiscordNewsThreadId(request.discordNewsThreadId());
     }
 
     public EventEditionResponse toResponse(EventEdition edition) {
         // getId() su un proxy LAZY non ne forza il caricamento
         return new EventEditionResponse(edition.getId(), edition.getEventTemplate().getId(),
-                edition.getPlannedAt(), edition.getDiscordEventId());
+                edition.getPlannedAt(), edition.getDiscordEventId(), edition.getDiscordNewsThreadId());
     }
 }
